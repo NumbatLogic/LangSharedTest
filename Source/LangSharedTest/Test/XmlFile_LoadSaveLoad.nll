@@ -1,0 +1,93 @@
+namespace NumbatLogic
+{
+	class XmlFile_LoadSaveLoad
+	{
+        public static void Run()
+		{
+			// Create test XML content
+			InternalString* testXml = own new InternalString("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n  <element id=\"1\" name=\"test\">\n    <child>Hello World</child>\n    <child>Another child</child>\n  </element>\n  <element id=\"2\" name=\"test2\">\n    <child>Second element</child>\n  </element>\n</root>");
+			
+			// Create blob with test XML data
+			Blob* pBlob = own new Blob(true);
+			BlobView pBlobView = pBlob.GetBlobView();
+			pBlobView.SetOffset(0);
+			// Write InternalString to BlobView as UTF-8
+			testXml.BlobWriteUtf8(pBlobView, true);
+			
+			// Ensure offset is 0 before loading
+			pBlobView.SetOffset(0);
+			
+			// Step 1: Load XML from blob
+			XmlFile* pXmlFile = own new XmlFile();
+			Assert::Plz(pXmlFile != null);
+			bool loadResult = pXmlFile.Load(pBlobView);
+			Assert::Plz(loadResult == true);
+			
+			// Step 2: Verify XML loaded correctly
+			XmlNode pRoot = pXmlFile.GetFirstChildElement("root");
+			Assert::Plz(pRoot != null);
+			
+			XmlNode pElement1 = pRoot.GetFirstChildElement("element");
+			Assert::Plz(pElement1 != null);
+			
+			Assert::Plz(ExternalString::Equal(pElement1.GetAttribute("id"), "1"));
+			
+			Assert::Plz(ExternalString::Equal(pElement1.GetAttribute("name"), "test"));
+			
+			XmlNode pChild1 = pElement1.GetFirstChildElement("child");
+			Assert::Plz(pChild1 != null);
+			Assert::Plz(ExternalString::Equal(pChild1.GetText(), "Hello World"));
+			
+			XmlNode pChild2 = pChild1.GetNextSiblingElement("child");
+			Assert::Plz(pChild2 != null);
+			Assert::Plz(ExternalString::Equal(pChild2.GetText(), "Another child"));
+			
+			XmlNode pElement2 = pElement1.GetNextSiblingElement("element");
+			Assert::Plz(pElement2 != null);
+			Assert::Plz(ExternalString::Equal(pElement2.GetAttribute("id"), "2"));
+			Assert::Plz(ExternalString::Equal(pElement2.GetAttribute("name"), "test2"));
+			
+			XmlNode pChild3 = pElement2.GetFirstChildElement("child");
+			Assert::Plz(pChild3 != null);
+			Assert::Plz(ExternalString::Equal(pChild3.GetText(), "Second element"));
+			
+			// Step 3: Save XML back to blob
+			Blob* pSaveBlob = own new Blob(true);
+			BlobView pSaveBlobView = pSaveBlob.GetBlobView();
+			bool saveResult = pXmlFile.Save(pSaveBlobView);
+			Assert::Plz(saveResult == true);
+			
+			// Step 4: Load the saved XML again
+			XmlFile* pReloadedXmlFile = own new XmlFile();
+			Assert::Plz(pReloadedXmlFile != null);
+			bool reloadResult = pReloadedXmlFile.Load(pSaveBlobView);
+			Assert::Plz(reloadResult == true);
+			
+			// Step 5: Verify the reloaded XML is correct
+			XmlNode pReloadedRoot = pReloadedXmlFile.GetFirstChildElement("root");
+			Assert::Plz(pReloadedRoot != null);
+			
+			XmlNode pReloadedElement1 = pReloadedRoot.GetFirstChildElement("element");
+			Assert::Plz(pReloadedElement1 != null);
+			Assert::Plz(ExternalString::Equal(pReloadedElement1.GetAttribute("id"), "1"));
+			Assert::Plz(ExternalString::Equal(pReloadedElement1.GetAttribute("name"), "test"));
+			
+			XmlNode pReloadedChild1 = pReloadedElement1.GetFirstChildElement("child");
+			Assert::Plz(pReloadedChild1 != null);
+			Assert::Plz(ExternalString::Equal(pReloadedChild1.GetText(), "Hello World"));
+			
+			XmlNode pReloadedChild2 = pReloadedChild1.GetNextSiblingElement("child");
+			Assert::Plz(pReloadedChild2 != null);
+			Assert::Plz(ExternalString::Equal(pReloadedChild2.GetText(), "Another child"));
+			
+			XmlNode pReloadedElement2 = pReloadedElement1.GetNextSiblingElement("element");
+			Assert::Plz(pReloadedElement2 != null);
+			Assert::Plz(ExternalString::Equal(pReloadedElement2.GetAttribute("id"), "2"));
+			Assert::Plz(ExternalString::Equal(pReloadedElement2.GetAttribute("name"), "test2"));
+			
+			XmlNode pReloadedChild3 = pReloadedElement2.GetFirstChildElement("child");
+			Assert::Plz(pReloadedChild3 != null);
+			Assert::Plz(ExternalString::Equal(pReloadedChild3.GetText(), "Second element"));
+		}
+	}
+}

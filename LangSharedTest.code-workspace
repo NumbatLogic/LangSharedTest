@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"name": "LangSharedTest",
+			"path": "."
+		},
+		{
+			"name": "Lang",
+			"path": "../Lang"
+		},
+		{
+			"name": "LangShared",
+			"path": "../LangShared"
+		},
+		{
+			"name": "CodeCrab",
+			"path": "../CodeCrab"
+		},
+		{
+			"name": "ProjectGen",
+			"path": "../ProjectGen"
+		}
+	],
+	"settings": {}
+}

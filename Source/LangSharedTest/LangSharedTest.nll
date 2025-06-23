@@ -1,0 +1,18 @@
+namespace NumbatLogic
+{
+	class LangSharedTest
+	{
+		public static void Run()
+		{
+			/*<?
+				include_once "../../../LangShared/Test/TestMetaprogramming.php";
+				Test_SetFolder("Test");
+				Test_Output();
+			?>*/
+				Console::Log("XmlFile_LoadSaveLoad");
+				XmlFile_LoadSaveLoad::Run();
+
+			/*<??>*/
+		}
+	}
+}

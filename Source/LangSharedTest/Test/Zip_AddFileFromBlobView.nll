@@ -1,0 +1,61 @@
+namespace NumbatLogic
+{
+	class Zip_AddFileFromBlobView
+	{
+		public static void Run()
+		{
+			// Step 1: Create a zip writer
+			ZipWriter* pZipWriter = own new ZipWriter();
+			Assert::Plz(pZipWriter != null);
+			
+			// Step 2: Create test data in a blob
+			Blob* pTestDataBlob = own new Blob(true);
+			BlobView pTestDataBlobView = pTestDataBlob.GetBlobView();
+			
+			// Add some test content to the blob
+			InternalString* sTestContent = own new InternalString("Hello, this is test content for the zip file!");
+			sTestContent.BlobWriteUtf8(pTestDataBlobView, false);
+			
+			// Reset blob view offset to beginning for reading
+			pTestDataBlobView.SetOffset(0);
+			
+			// Step 3: Add file to zip from blob view using ZipWriter
+			string fileName = "testfile.txt";
+			bool addResult = pZipWriter.AddFileFromBlobView(fileName, pTestDataBlobView);
+			Assert::Plz(addResult == true);
+			
+			// Step 4: Save zip to a blob using ZipWriter
+			Blob* pSaveBlob = own new Blob(true);
+			BlobView pSaveBlobView = pSaveBlob.GetBlobView();
+			bool saveResult = pZipWriter.SaveBlobView(pSaveBlobView);
+			Assert::Plz(saveResult == true);
+
+			// Step 5: Load the saved zip back using Zip (for reading)
+			Zip* pReloadedZip = own new Zip();
+			Assert::Plz(pReloadedZip != null);
+			
+			// Reset blob view offset to beginning
+			pSaveBlobView.SetOffset(0);
+			bool loadResult = pReloadedZip.LoadBlobView(pSaveBlobView);
+			Assert::Plz(loadResult == true);
+			
+			// Step 6: Verify reloaded zip has the file
+			int reloadedNumFiles = pReloadedZip.GetNumFile();
+			Assert::Plz(reloadedNumFiles == 1);
+			
+			// Step 7: Get file info from reloaded zip
+			ZipFileInfo reloadedFileInfo = pReloadedZip.GetFileInfo(0);
+			Assert::Plz(ExternalString::Equal(reloadedFileInfo.GetFileName(), fileName));
+			Assert::Plz(reloadedFileInfo.GetSize() == sTestContent.GetLength());
+			
+			// extract file
+			InternalString* sExtractedResult = own new InternalString("");
+			bool bExtractResult = pReloadedZip.ExtractFileByIndexToString(0, sExtractedResult);
+			Assert::Plz(bExtractResult != false);
+			
+			// compare
+			Assert::Plz(sExtractedResult.IsEqual(sTestContent.GetExternalString()));
+			Assert::Plz(sExtractedResult.GetLength() == sTestContent.GetLength());
+		}
+	}
+} 

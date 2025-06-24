@@ -1,0 +1,49 @@
+namespace NumbatLogic
+{
+	class Zip_SaveLoadEmpty
+	{
+        public static void Run()
+		{
+			// Step 1: Create an empty zip file
+			Zip* pZip = own new Zip();
+			Assert::Plz(pZip != null);
+			
+			// Step 2: Save the empty zip to a blob
+			Blob* pSaveBlob = own new Blob(true);
+			BlobView pSaveBlobView = pSaveBlob.GetBlobView();
+			bool saveResult = pZip.SaveBlobView(pSaveBlobView);
+			Assert::Plz(saveResult == true);
+			
+			// Step 3: Get CRC32 of the saved blob
+			Uint32 saveCrc32 = pSaveBlob.GetMsoCrc32();
+			
+			// Step 4: Load the saved zip back
+			Zip* pReloadedZip = own new Zip();
+			Assert::Plz(pReloadedZip != null);
+			
+			// Reset blob view offset to beginning
+			pSaveBlobView.SetOffset(0);
+			bool loadResult = pReloadedZip.LoadBlobView(pSaveBlobView);
+			Assert::Plz(loadResult == true);
+			
+			// Step 5: Save the reloaded zip to another blob
+			Blob* pReloadedSaveBlob = own new Blob(true);
+			BlobView pReloadedSaveBlobView = pReloadedSaveBlob.GetBlobView();
+			bool reloadedSaveResult = pReloadedZip.SaveBlobView(pReloadedSaveBlobView);
+			Assert::Plz(reloadedSaveResult == true);
+			
+			// Step 6: Get CRC32 of the reloaded save blob
+			Uint32 reloadedSaveCrc32 = pReloadedSaveBlob.GetMsoCrc32();
+			
+			// Step 7: Compare the CRC32 values - they should be identical
+			Assert::Plz(saveCrc32 == reloadedSaveCrc32);
+			
+			// Step 8: Verify both zips are empty
+			int numFiles1 = pZip.GetNumFile();
+			int numFiles2 = pReloadedZip.GetNumFile();
+			Assert::Plz(numFiles1 == 0);
+			Assert::Plz(numFiles2 == 0);
+			Assert::Plz(numFiles1 == numFiles2);
+		}
+	}
+} 

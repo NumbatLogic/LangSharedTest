@@ -11,6 +11,10 @@ namespace NumbatLogic
 			?>*/
 				Console::Log("XmlFile_LoadSaveLoad");
 				XmlFile_LoadSaveLoad::Run();
+				Console::Log("Zip_AddFileFromBlobView");
+				Zip_AddFileFromBlobView::Run();
+				Console::Log("Zip_SaveLoadEmpty");
+				Zip_SaveLoadEmpty::Run();
 
 			/*<??>*/
 		}

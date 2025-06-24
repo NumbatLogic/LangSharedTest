@@ -19,9 +19,10 @@ namespace NumbatLogic
 			// Reset blob view offset to beginning for reading
 			pTestDataBlobView.SetOffset(0);
 			
-			// Step 3: Add file to zip from blob view using ZipWriter
+			// Step 3: Add file to zip from blob using ZipWriter
 			string fileName = "testfile.txt";
-			bool addResult = pZipWriter.AddFileFromBlobView(fileName, pTestDataBlobView);
+			bool addResult;
+			addResult = pZipWriter.AddFileFromBlob(fileName, disown pTestDataBlob);
 			Assert::Plz(addResult == true);
 			
 			// Step 4: Save zip to a blob using ZipWriter

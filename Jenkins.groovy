@@ -37,7 +37,7 @@ pipeline{
 
 		stage("Build"){
 			steps{
-				sh "cd Lang && RebuildCPP.sh && cd ../LangSharedTest && ./Rebuild.sh && ./TestCPP.sh && ./TestCS.sh"
+				sh "cd Lang && ./RebuildCPP.sh && cd ../LangSharedTest && ./Rebuild.sh && ./TestCPP.sh && ./TestCS.sh"
 			}
 		}
 

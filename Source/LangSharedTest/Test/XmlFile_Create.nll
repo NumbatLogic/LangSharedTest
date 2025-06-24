@@ -1,0 +1,85 @@
+namespace NumbatLogic
+{
+	class XmlFile_Create
+	{
+        public static void Run()
+		{
+			// Create a new XML file
+			XmlFile* pXmlFile = own new XmlFile();
+			Assert::Plz(pXmlFile != null);
+			
+			// Create root element
+			XmlNode pRoot = pXmlFile.CreateElement("root");
+			Assert::Plz(pRoot != null);
+			pXmlFile.AppendChild(pRoot);
+			
+			// Create first element with attributes and text
+			XmlNode pElement1 = pXmlFile.CreateElement("element");
+			Assert::Plz(pElement1 != null);
+			pElement1.SetAttribute("id", "1");
+			pElement1.SetAttribute("name", "test");
+			pRoot.AppendChild(pElement1);
+			
+			// Create child elements for first element
+			XmlNode pChild1 = pXmlFile.CreateElement("child");
+			Assert::Plz(pChild1 != null);
+			pChild1.SetText("Hello World");
+			pElement1.AppendChild(pChild1);
+			
+			XmlNode pChild2 = pXmlFile.CreateElement("child");
+			Assert::Plz(pChild2 != null);
+			pChild2.SetText("Another child");
+			pElement1.AppendChild(pChild2);
+			
+			// Create second element with attributes and text
+			XmlNode pElement2 = pXmlFile.CreateElement("element");
+			Assert::Plz(pElement2 != null);
+			pElement2.SetAttribute("id", "2");
+			pElement2.SetAttribute("name", "test2");
+			pRoot.AppendChild(pElement2);
+			
+			XmlNode pChild3 = pXmlFile.CreateElement("child");
+			Assert::Plz(pChild3 != null);
+			pChild3.SetText("Second element");
+			pElement2.AppendChild(pChild3);
+			
+			// Save the created XML to a blob
+			Blob* pBlob = own new Blob(true);
+			BlobView pBlobView = pBlob.GetBlobView();
+			bool saveResult = pXmlFile.Save(pBlobView);
+			Assert::Plz(saveResult == true);
+			
+			// Load the saved XML to verify it was created correctly
+			XmlFile* pLoadedXmlFile = own new XmlFile();
+			Assert::Plz(pLoadedXmlFile != null);
+			bool loadResult = pLoadedXmlFile.Load(pBlobView);
+			Assert::Plz(loadResult == true);
+			
+			// Verify the loaded XML structure
+			XmlNode pLoadedRoot = pLoadedXmlFile.GetFirstChildElement("root");
+			Assert::Plz(pLoadedRoot != null);
+			
+			XmlNode pLoadedElement1 = pLoadedRoot.GetFirstChildElement("element");
+			Assert::Plz(pLoadedElement1 != null);
+			Assert::Plz(ExternalString::Equal(pLoadedElement1.GetAttribute("id"), "1"));
+			Assert::Plz(ExternalString::Equal(pLoadedElement1.GetAttribute("name"), "test"));
+			
+			XmlNode pLoadedChild1 = pLoadedElement1.GetFirstChildElement("child");
+			Assert::Plz(pLoadedChild1 != null);
+			Assert::Plz(ExternalString::Equal(pLoadedChild1.GetText(), "Hello World"));
+			
+			XmlNode pLoadedChild2 = pLoadedChild1.GetNextSiblingElement("child");
+			Assert::Plz(pLoadedChild2 != null);
+			Assert::Plz(ExternalString::Equal(pLoadedChild2.GetText(), "Another child"));
+			
+			XmlNode pLoadedElement2 = pLoadedElement1.GetNextSiblingElement("element");
+			Assert::Plz(pLoadedElement2 != null);
+			Assert::Plz(ExternalString::Equal(pLoadedElement2.GetAttribute("id"), "2"));
+			Assert::Plz(ExternalString::Equal(pLoadedElement2.GetAttribute("name"), "test2"));
+			
+			XmlNode pLoadedChild3 = pLoadedElement2.GetFirstChildElement("child");
+			Assert::Plz(pLoadedChild3 != null);
+			Assert::Plz(ExternalString::Equal(pLoadedChild3.GetText(), "Second element"));
+		}
+	}
+}

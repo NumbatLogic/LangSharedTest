@@ -9,6 +9,8 @@ namespace NumbatLogic
 				Test_SetFolder("Test");
 				Test_Output();
 			?>*/
+				Console::Log("XmlFile_Create");
+				XmlFile_Create::Run();
 				Console::Log("XmlFile_LoadSaveLoad");
 				XmlFile_LoadSaveLoad::Run();
 				Console::Log("Zip_AddFileFromBlobView");

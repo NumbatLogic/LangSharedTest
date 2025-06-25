@@ -9,6 +9,8 @@ namespace NumbatLogic
 				Test_SetFolder("Test");
 				Test_Output();
 			?>*/
+				Console::Log("InternalString_AppendHex");
+				InternalString_AppendHex::Run();
 				Console::Log("XmlFile_Create");
 				XmlFile_Create::Run();
 				Console::Log("XmlFile_LoadSaveLoad");

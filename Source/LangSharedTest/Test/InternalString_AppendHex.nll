@@ -1,0 +1,66 @@
+namespace NumbatLogic
+{
+	class InternalString_AppendHex
+	{
+        public static void Run()
+		{
+			// Test basic hex values
+			InternalString* pString1 = own new InternalString("Test: ");
+			pString1.AppendHex(0x1234);
+			Assert::Plz(pString1.IsEqual("Test: 1234"));
+			
+			// Test zero
+			InternalString* pString2 = own new InternalString("Zero: ");
+			pString2.AppendHex(0);
+			Assert::Plz(pString2.IsEqual("Zero: 0"));
+			
+			// Test maximum 32-bit unsigned value
+			InternalString* pString3 = own new InternalString("Max: ");
+			pString3.AppendHex(0xFFFFFFFF);
+			Assert::Plz(pString3.IsEqual("Max: FFFFFFFF"));
+			
+			// Test single digit hex values
+			InternalString* pString4 = own new InternalString("Single: ");
+			pString4.AppendHex(0xA);
+			Assert::Plz(pString4.IsEqual("Single: A"));
+			
+			pString4.AppendHex(0xF);
+			Assert::Plz(pString4.IsEqual("Single: AF"));
+			
+			// Test multiple append operations
+			InternalString* pString5 = own new InternalString("Multi: ");
+			pString5.AppendHex(0xDEAD);
+			pString5.AppendString(" ");
+			pString5.AppendHex(0xBEEF);
+			Assert::Plz(pString5.IsEqual("Multi: DEAD BEEF"));
+			
+			// Test with other append functions
+			InternalString* pString6 = own new InternalString("Mixed: ");
+			pString6.AppendHex(0x123);
+			pString6.AppendString(" ");
+			pString6.AppendInt(456);
+			pString6.AppendString(" ");
+			pString6.AppendHex(0x789);
+			Assert::Plz(pString6.IsEqual("Mixed: 123 456 789"));
+			
+			// Test edge cases with different bit patterns
+			InternalString* pString7 = own new InternalString("Edge: ");
+			pString7.AppendHex(0x80000000); // High bit set
+			Assert::Plz(pString7.IsEqual("Edge: 80000000"));
+			
+			// Test with leading zeros (should not be displayed)
+			InternalString* pString8 = own new InternalString("Leading: ");
+			pString8.AppendHex(0x0000000F); // Should display as "F"
+			Assert::Plz(pString8.IsEqual("Leading: F"));
+			
+			// Test with all bits set in different positions
+			InternalString* pString9 = own new InternalString("Bits: ");
+			pString9.AppendHex(0x000000FF); // 8 bits
+			pString9.AppendString(" ");
+			pString9.AppendHex(0x0000FFFF); // 16 bits
+			pString9.AppendString(" ");
+			pString9.AppendHex(0x00FFFFFF); // 24 bits
+			Assert::Plz(pString9.IsEqual("Bits: FF FFFF FFFFFF"));
+		}
+	}
+}

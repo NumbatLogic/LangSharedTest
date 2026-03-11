@@ -8,16 +8,13 @@ namespace NumbatLogic
 			ZipWriter* pZipWriter = own new ZipWriter();
 			Assert::Plz(pZipWriter != null);
 			
-			// Step 2: Create test data in a blob
-			Blob* pTestDataBlob = own new Blob(true);
-			BlobView pTestDataBlobView = pTestDataBlob.GetBlobView();
-			
-			// Add some test content to the blob
+			// Step 2: Create test data in a gsBlob
 			InternalString* sTestContent = own new InternalString("Hello, this is test content for the zip file!");
-			sTestContent.BlobWriteUtf8(pTestDataBlobView, false);
-			
-			// Reset blob view offset to beginning for reading
-			pTestDataBlobView.SetOffset(0);
+			gsBlob* pTestDataBlob = own new gsBlob();
+			// Write the test content as raw UTF-8 bytes into the blob
+			pTestDataBlob.PackExternalString(sTestContent.GetExternalString());
+			// Skip the length header so file content starts at the text
+			pTestDataBlob.SetOffset(2);
 			
 			// Step 3: Add file to zip from blob using ZipWriter
 			string fileName = "testfile.txt";
@@ -26,18 +23,17 @@ namespace NumbatLogic
 			Assert::Plz(addResult == true);
 			
 			// Step 4: Save zip to a blob using ZipWriter
-			Blob* pSaveBlob = own new Blob(true);
-			BlobView pSaveBlobView = pSaveBlob.GetBlobView();
-			bool saveResult = pZipWriter.SaveBlobView(pSaveBlobView);
+			gsBlob* pSaveBlob = own new gsBlob();
+			bool saveResult = pZipWriter.Save(pSaveBlob);
 			Assert::Plz(saveResult == true);
 
 			// Step 5: Load the saved zip back using Zip (for reading)
 			Zip* pReloadedZip = own new Zip();
 			Assert::Plz(pReloadedZip != null);
 			
-			// Reset blob view offset to beginning
-			pSaveBlobView.SetOffset(0);
-			bool loadResult = pReloadedZip.LoadBlobView(pSaveBlobView);
+			// Reset blob offset to beginning
+			pSaveBlob.SetOffset(0);
+			bool loadResult = pReloadedZip.Load(pSaveBlob);
 			Assert::Plz(loadResult == true);
 			
 			// Step 6: Verify reloaded zip has the file

@@ -1,0 +1,41 @@
+namespace NumbatLogic
+{
+	class Zip_ErrorCases
+	{
+		public static void Run()
+		{
+			// Case 1: Load from empty blob should fail
+			gsBlob* pEmptyBlob = own new gsBlob();
+			Zip* pZipEmpty = own new Zip();
+			Assert::Plz(pZipEmpty.Load(pEmptyBlob) == false);
+
+			// Case 2: Extract from zip that was never loaded should fail
+			gsBlob* pOutBlob = own new gsBlob();
+			Assert::Plz(pZipEmpty.ExtractFileByIndexToBlob(0, pOutBlob) == false);
+
+			// Case 3: Create a valid empty zip then try to extract a non-existent index
+			Zip* pZip = own new Zip();
+			Assert::Plz(pZip != null);
+
+			gsBlob* pSaveBlob = own new gsBlob();
+			Assert::Plz(pZip.Save(pSaveBlob) == true);
+
+			// Reload the just-saved empty zip
+			pSaveBlob.SetOffset(0);
+			Assert::Plz(pZip.Load(pSaveBlob) == true);
+			Assert::Plz(pZip.GetNumFile() == 0);
+
+			// Extract index 0 from an empty archive should fail
+			gsBlob* pOutBlob2 = own new gsBlob();
+			Assert::Plz(pZip.ExtractFileByIndexToBlob(0, pOutBlob2) == false);
+
+			// Extract by name that does not exist should fail
+			Assert::Plz(pZip.ExtractFileByNameToBlob("does/not/exist.txt", pOutBlob2) == false);
+
+			// Extract to string with bad index should also fail
+			InternalString* sOut = own new InternalString("");
+			Assert::Plz(pZip.ExtractFileByIndexToString(0, sOut) == false);
+		}
+	}
+}
+

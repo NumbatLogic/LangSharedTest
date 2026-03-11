@@ -1,0 +1,27 @@
+namespace NumbatLogic
+{
+	class ExternalString_TTHash
+	{
+        public static void Run()
+		{
+			// Basic string
+			string sxTest1 = "GameBlob";
+			Uint32 nChecksum1 = ExternalString::GetChecksum(sxTest1);
+			Uint32 nTTHash1 = tthash("GameBlob");
+			Assert::Plz(nChecksum1 == nTTHash1);
+
+			// Empty string
+			string sxTest2 = "";
+			Uint32 nChecksum2 = ExternalString::GetChecksum(sxTest2);
+			Uint32 nTTHash2 = tthash("");
+			Assert::Plz(nChecksum2 == nTTHash2);
+
+			// Longer / mixed string
+			string sxTest3 = "ExternalString_TTHash_Test_123";
+			Uint32 nChecksum3 = ExternalString::GetChecksum(sxTest3);
+			Uint32 nTTHash3 = tthash("ExternalString_TTHash_Test_123");
+			Assert::Plz(nChecksum3 == nTTHash3);
+		}
+	}
+}
+

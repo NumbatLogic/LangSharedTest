@@ -44,15 +44,15 @@ namespace NumbatLogic
 			pElement2.AppendChild(pChild3);
 			
 			// Save the created XML to a blob
-			Blob* pBlob = own new Blob(true);
-			BlobView pBlobView = pBlob.GetBlobView();
-			bool saveResult = pXmlFile.Save(pBlobView);
+			gsBlob* pBlob = own new gsBlob();
+			bool saveResult = pXmlFile.Save(pBlob);
 			Assert::Plz(saveResult == true);
 			
 			// Load the saved XML to verify it was created correctly
+			pBlob.SetOffset(0);
 			XmlFile* pLoadedXmlFile = own new XmlFile();
 			Assert::Plz(pLoadedXmlFile != null);
-			bool loadResult = pLoadedXmlFile.Load(pBlobView);
+			bool loadResult = pLoadedXmlFile.Load(pBlob);
 			Assert::Plz(loadResult == true);
 			
 			// Verify the loaded XML structure

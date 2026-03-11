@@ -9,34 +9,32 @@ namespace NumbatLogic
 			Assert::Plz(pZip != null);
 			
 			// Step 2: Save the empty zip to a blob
-			Blob* pSaveBlob = own new Blob(true);
-			BlobView pSaveBlobView = pSaveBlob.GetBlobView();
-			bool saveResult = pZip.SaveBlobView(pSaveBlobView);
+			gsBlob* pSaveBlob = own new gsBlob();
+			bool saveResult = pZip.Save(pSaveBlob);
 			Assert::Plz(saveResult == true);
 			
-			// Step 3: Get CRC32 of the saved blob
-			Uint32 saveCrc32 = pSaveBlob.GetMsoCrc32();
+			// Step 3: Get checksum of the saved blob
+			Uint8 saveChecksum = pSaveBlob.GetChecksum();
 			
 			// Step 4: Load the saved zip back
 			Zip* pReloadedZip = own new Zip();
 			Assert::Plz(pReloadedZip != null);
 			
-			// Reset blob view offset to beginning
-			pSaveBlobView.SetOffset(0);
-			bool loadResult = pReloadedZip.LoadBlobView(pSaveBlobView);
+			// Ensure blob offset is at the start
+			pSaveBlob.SetOffset(0);
+			bool loadResult = pReloadedZip.Load(pSaveBlob);
 			Assert::Plz(loadResult == true);
 			
 			// Step 5: Save the reloaded zip to another blob
-			Blob* pReloadedSaveBlob = own new Blob(true);
-			BlobView pReloadedSaveBlobView = pReloadedSaveBlob.GetBlobView();
-			bool reloadedSaveResult = pReloadedZip.SaveBlobView(pReloadedSaveBlobView);
+			gsBlob* pReloadedSaveBlob = own new gsBlob();
+			bool reloadedSaveResult = pReloadedZip.Save(pReloadedSaveBlob);
 			Assert::Plz(reloadedSaveResult == true);
 			
-			// Step 6: Get CRC32 of the reloaded save blob
-			Uint32 reloadedSaveCrc32 = pReloadedSaveBlob.GetMsoCrc32();
+			// Step 6: Get checksum of the reloaded save blob
+			Uint8 reloadedSaveChecksum = pReloadedSaveBlob.GetChecksum();
 			
-			// Step 7: Compare the CRC32 values - they should be identical
-			Assert::Plz(saveCrc32 == reloadedSaveCrc32);
+			// Step 7: Compare the checksum values - they should be identical
+			Assert::Plz(saveChecksum == reloadedSaveChecksum);
 			
 			// Step 8: Verify both zips are empty
 			int numFiles1 = pZip.GetNumFile();

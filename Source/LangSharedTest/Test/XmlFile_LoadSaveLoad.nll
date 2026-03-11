@@ -5,22 +5,18 @@ namespace NumbatLogic
         public static void Run()
 		{
 			// Create test XML content
-			InternalString* testXml = own new InternalString("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n  <element id=\"1\" name=\"test\">\n    <child>Hello World</child>\n    <child>Another child</child>\n  </element>\n  <element id=\"2\" name=\"test2\">\n    <child>Second element</child>\n  </element>\n</root>");
+			string sxTestXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>\n  <element id=\"1\" name=\"test\">\n    <child>Hello World</child>\n    <child>Another child</child>\n  </element>\n  <element id=\"2\" name=\"test2\">\n    <child>Second element</child>\n  </element>\n</root>";
 			
-			// Create blob with test XML data
-			Blob* pBlob = own new Blob(true);
-			BlobView pBlobView = pBlob.GetBlobView();
-			pBlobView.SetOffset(0);
-			// Write InternalString to BlobView as UTF-8
-			testXml.BlobWriteUtf8(pBlobView, true);
-			
-			// Ensure offset is 0 before loading
-			pBlobView.SetOffset(0);
+			// Create gsBlob with test XML data (as a packed external string)
+			gsBlob* pBlob = own new gsBlob();
+			pBlob.PackExternalString(sxTestXml);
+			// Skip the PackExternalString length header (2 bytes) so XmlFile sees raw XML
+			pBlob.SetOffset(2);
 			
 			// Step 1: Load XML from blob
 			XmlFile* pXmlFile = own new XmlFile();
 			Assert::Plz(pXmlFile != null);
-			bool loadResult = pXmlFile.Load(pBlobView);
+			bool loadResult = pXmlFile.Load(pBlob);
 			Assert::Plz(loadResult == true);
 			
 			// Step 2: Verify XML loaded correctly
@@ -52,15 +48,15 @@ namespace NumbatLogic
 			Assert::Plz(ExternalString::Equal(pChild3.GetText(), "Second element"));
 			
 			// Step 3: Save XML back to blob
-			Blob* pSaveBlob = own new Blob(true);
-			BlobView pSaveBlobView = pSaveBlob.GetBlobView();
-			bool saveResult = pXmlFile.Save(pSaveBlobView);
+			gsBlob* pSaveBlob = own new gsBlob();
+			bool saveResult = pXmlFile.Save(pSaveBlob);
 			Assert::Plz(saveResult == true);
 			
 			// Step 4: Load the saved XML again
+			pSaveBlob.SetOffset(0);
 			XmlFile* pReloadedXmlFile = own new XmlFile();
 			Assert::Plz(pReloadedXmlFile != null);
-			bool reloadResult = pReloadedXmlFile.Load(pSaveBlobView);
+			bool reloadResult = pReloadedXmlFile.Load(pSaveBlob);
 			Assert::Plz(reloadResult == true);
 			
 			// Step 5: Verify the reloaded XML is correct

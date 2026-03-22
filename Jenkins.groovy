@@ -37,7 +37,7 @@ pipeline{
 
 		stage("Build"){
 			steps{
-				sh "./CIRebuild.sh"
+				sh "cd LangSharedTest && ./CIRebuild.sh"
 			}
 		}
 

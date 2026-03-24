@@ -2,7 +2,7 @@
 set -xeuo pipefail
 
 cd ../Lang
-./DevBuildCS.sh
+./Bootstrap.sh
 
 cd ../LangSharedTest
 

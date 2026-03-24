@@ -1,6 +1,4 @@
 #!/bin/bash
-set -x
+set -e
 
-cd Source/LangSharedTest
-php -d short_open_tag=true -d display_errors=true "../../../CodeCrab/CodeCrab.php" "."
-cd ../..
+../LangShared/Script/CodeCrab.sh "$@"

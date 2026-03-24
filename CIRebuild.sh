@@ -3,9 +3,11 @@ set -xeuo pipefail
 
 cd ../Lang
 ./DevBuildCS.sh
-./RebuildCPP.sh
 
 cd ../LangSharedTest
-./Rebuild.sh
-./TestCPP.sh
-./TestCS.sh
+
+./Rebuild.sh --CPP
+./Test.sh --CPP
+
+./Build.sh --CS
+./Test.sh --CS

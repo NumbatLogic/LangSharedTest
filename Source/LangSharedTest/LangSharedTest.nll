@@ -2,27 +2,48 @@ namespace NumbatLogic
 {
 	class LangSharedTest
 	{
-		public static void Run()
+		public static void @EntryPoint() Run(Vector<string> sArgVector)
 		{
 			/*<?
-				include_once "../../../LangShared/Test/TestMetaprogramming.php";
+				include_once "../../../LangShared/Source/Test/TestMetaprogramming.php";
 				Test_SetFolder("Test");
 				Test_Output();
 			?>*/
-				Console::Log("ExternalString_TTHash");
-				ExternalString_TTHash::Run();
-				Console::Log("InternalString_AppendHex");
-				InternalString_AppendHex::Run();
-				Console::Log("XmlFile_Create");
-				XmlFile_Create::Run();
-				Console::Log("XmlFile_LoadSaveLoad");
-				XmlFile_LoadSaveLoad::Run();
-				Console::Log("Zip_AddFileFromBlobView");
-				Zip_AddFileFromBlobView::Run();
-				Console::Log("Zip_ErrorCases");
-				Zip_ErrorCases::Run();
-				Console::Log("Zip_SaveLoadEmpty");
-				Zip_SaveLoadEmpty::Run();
+				if (sArgVector.GetSize() == 0 || ExternalString::Equal(sArgVector.Get(0), "ExternalString_TTHash"))
+				{
+					Console::Log("ExternalString_TTHash");
+					ExternalString_TTHash::Run();
+				}
+				if (sArgVector.GetSize() == 0 || ExternalString::Equal(sArgVector.Get(0), "InternalString_AppendHex"))
+				{
+					Console::Log("InternalString_AppendHex");
+					InternalString_AppendHex::Run();
+				}
+				if (sArgVector.GetSize() == 0 || ExternalString::Equal(sArgVector.Get(0), "XmlFile_Create"))
+				{
+					Console::Log("XmlFile_Create");
+					XmlFile_Create::Run();
+				}
+				if (sArgVector.GetSize() == 0 || ExternalString::Equal(sArgVector.Get(0), "XmlFile_LoadSaveLoad"))
+				{
+					Console::Log("XmlFile_LoadSaveLoad");
+					XmlFile_LoadSaveLoad::Run();
+				}
+				if (sArgVector.GetSize() == 0 || ExternalString::Equal(sArgVector.Get(0), "Zip_AddFileFromBlobView"))
+				{
+					Console::Log("Zip_AddFileFromBlobView");
+					Zip_AddFileFromBlobView::Run();
+				}
+				if (sArgVector.GetSize() == 0 || ExternalString::Equal(sArgVector.Get(0), "Zip_ErrorCases"))
+				{
+					Console::Log("Zip_ErrorCases");
+					Zip_ErrorCases::Run();
+				}
+				if (sArgVector.GetSize() == 0 || ExternalString::Equal(sArgVector.Get(0), "Zip_SaveLoadEmpty"))
+				{
+					Console::Log("Zip_SaveLoadEmpty");
+					Zip_SaveLoadEmpty::Run();
+				}
 
 			/*<??>*/
 		}

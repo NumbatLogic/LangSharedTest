@@ -1,10 +1,4 @@
 #!/bin/bash
+set -e
 
-mapfile -t sPackages < LangShared.package-list
-sLangSharedArgs=()
-for sPackage in "${sPackages[@]}"; do
-	sLangSharedArgs+=("-f")
-	sLangSharedArgs+=("../LangShared/Source/$sPackage")
-done
-
-gdb -ex "set confirm off" -ex run -ex backtrace -ex quit --args ../Lang/Bin/CLI -f Source "${sLangSharedArgs[@]}"
+../LangShared/Script/Transpile.sh "$@"

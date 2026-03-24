@@ -1,8 +1,4 @@
 #!/bin/bash
+set -e
 
-rm -rf Transpiled
-
-./Transpile.sh
-
-cd Project
-./RebuildCPP.sh
+../LangShared/Script/Rebuild.sh "$@"

@@ -5,8 +5,7 @@
 		{
 			parent::__construct($sAction);
 
-			$this->m_xFileArray = array_merge(
-				ProjectGen_ParseDirectory(dirname(__FILE__) . "/../../Transpiled/LangSharedTest", "/\.hpp|\.cpp/"));
+			$this->m_xFileArray = array_merge(ProjectGen_ParseDirectory(dirname(__FILE__) . "/../../Transpiled/LangSharedTest", ProjectGen_GetSourceRegex($sAction)));
 		}
 
 		public function GetName() { return "LangSharedTest"; }
